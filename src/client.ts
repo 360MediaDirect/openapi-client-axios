@@ -49,6 +49,7 @@ export class OpenAPIClientAxios {
   public document: Document;
   public inputDocument: Document | string;
   public definition: Document;
+  public schema: Document;
 
   public quick: boolean;
 
@@ -78,6 +79,7 @@ export class OpenAPIClientAxios {
    */
   constructor(opts: {
     definition: Document | string;
+    skipCompile?: boolean;
     quick?: boolean;
     axiosConfigDefaults?: AxiosRequestConfig;
     swaggerParserOpts?: RefParser.Options;
@@ -110,6 +112,7 @@ export class OpenAPIClientAxios {
     this.baseURLVariables = optsWithDefaults.baseURLVariables;
     this.transformOperationName = optsWithDefaults.transformOperationName;
     this.transformOperationMethod = optsWithDefaults.transformOperationMethod;
+    if (opts.skipCompile) this.schema = optsWithDefaults.definition as Document;
   }
 
   /**
@@ -150,7 +153,10 @@ export class OpenAPIClientAxios {
    * @memberof OpenAPIClientAxios
    */
   public init = async <Client = OpenAPIClient>(): Promise<Client> => {
-    if (this.quick) {
+    if (this.schema) {
+      this.definition = this.schema;
+      this.document = this.schema;
+    } else if (this.quick) {
       // to save time, just dereference input document
       this.definition = (await dereference(this.inputDocument, this.swaggerParserOpts)) as Document;
       // in quick mode no guarantees document will be the original document
@@ -167,6 +173,7 @@ export class OpenAPIClientAxios {
     this.instance = this.createAxiosInstance();
 
     // we are now initialized
+    this.schema = this.definition;
     this.initialized = true;
     return this.instance as Client;
   };
@@ -189,24 +196,28 @@ export class OpenAPIClientAxios {
    * @memberof OpenAPIClientAxios
    */
   public initSync = <Client = OpenAPIClient>(): Client => {
-    if (typeof this.inputDocument !== 'object') {
+    if (this.schema) {
+      this.document = this.schema;
+      this.definition = this.schema;
+    } else if (typeof this.inputDocument !== 'object') {
       throw new Error(`.initSync() can't be called with a non-object definition. Please use .init()`);
+    } else {
+      // set document
+      this.document = this.inputDocument;
+
+      // dereference the document into definition
+      this.definition = cloneDeep(this.document);
+      const parser = new RefParser();
+      parser.parse(this.definition);
+      parser.schema = this.definition;
+      dereferenceSync(parser, new RefParserOptions(this.swaggerParserOpts)); // mutates this.definition (synchronous)
     }
-
-    // set document
-    this.document = this.inputDocument;
-
-    // dereference the document into definition
-    this.definition = cloneDeep(this.document);
-    const parser = new RefParser();
-    parser.parse(this.definition);
-    parser.schema = this.definition;
-    dereferenceSync(parser, new RefParserOptions(this.swaggerParserOpts)); // mutates this.definition (synchronous)
 
     // create axios instance
     this.instance = this.createAxiosInstance();
 
     // we are now initialized
+    this.schema = this.definition;
     this.initialized = true;
     return this.instance as Client;
   };
