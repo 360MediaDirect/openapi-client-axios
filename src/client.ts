@@ -1,9 +1,9 @@
 import axios, { AxiosInstance, AxiosRequestConfig, Method } from 'axios';
 import bath from 'bath-es5';
-import { parse as parseJSONSchema, dereference } from '@apidevtools/json-schema-ref-parser';
-import RefParser from '@apidevtools/json-schema-ref-parser';
-import dereferenceSync from '@apidevtools/json-schema-ref-parser/lib/dereference';
-import RefParserOptions from '@apidevtools/json-schema-ref-parser/lib/options';
+import { parse as parseJSONSchema, dereference } from '@360mediadirect/json-schema-ref-parser';
+import RefParser from '@360mediadirect/json-schema-ref-parser';
+import dereferenceSync from '@360mediadirect/json-schema-ref-parser/lib/dereference';
+import RefParserOptions from '@360mediadirect/json-schema-ref-parser/lib/options';
 import QueryString from 'query-string';
 import get from 'lodash/get';
 import find from 'lodash/find';
@@ -62,8 +62,10 @@ export class OpenAPIClientAxios {
   private baseURLVariables: { [key: string]: string | number };
 
   private transformOperationName: (operation: string) => string;
-  private transformOperationMethod: (operationMethod: UnknownOperationMethod, operationToTransform: Operation)
-    => UnknownOperationMethod;
+  private transformOperationMethod: (
+    operationMethod: UnknownOperationMethod,
+    operationToTransform: Operation,
+  ) => UnknownOperationMethod;
 
   /**
    * Creates an instance of OpenAPIClientAxios.
@@ -82,8 +84,10 @@ export class OpenAPIClientAxios {
     withServer?: number | string | Server;
     baseURLVariables?: { [key: string]: string | number };
     transformOperationName?: (operation: string) => string;
-    transformOperationMethod?: (operationMethod: UnknownOperationMethod, operationToTransform: Operation)
-      => UnknownOperationMethod;
+    transformOperationMethod?: (
+      operationMethod: UnknownOperationMethod,
+      operationToTransform: Operation,
+    ) => UnknownOperationMethod;
   }) {
     const optsWithDefaults = {
       quick: false,
@@ -91,8 +95,7 @@ export class OpenAPIClientAxios {
       baseURLVariables: {},
       swaggerParserOpts: {} as RefParser.Options,
       transformOperationName: (operationId: string) => operationId,
-      transformOperationMethod:
-        (operationMethod: UnknownOperationMethod) => operationMethod,
+      transformOperationMethod: (operationMethod: UnknownOperationMethod) => operationMethod,
       ...opts,
       axiosConfigDefaults: {
         paramsSerializer: (params) => QueryString.stringify(params, { arrayFormat: 'none' }),

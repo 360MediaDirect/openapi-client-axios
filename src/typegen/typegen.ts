@@ -7,7 +7,7 @@ import { parseSchema } from '@anttiviljami/dtsgenerator/dist/core/jsonSchema';
 import ReferenceResolver from '@anttiviljami/dtsgenerator/dist/core/referenceResolver';
 import SchemaConvertor, { ExportedType } from '@anttiviljami/dtsgenerator/dist/core/schemaConvertor';
 import WriteProcessor from '@anttiviljami/dtsgenerator/dist/core/writeProcessor';
-import { bundle } from '@apidevtools/json-schema-ref-parser';
+import { bundle } from '@360mediadirect/json-schema-ref-parser';
 import { normalizeTypeName } from '@anttiviljami/dtsgenerator/dist/core/typeNameConvertor';
 
 interface TypegenOptions {
