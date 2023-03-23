@@ -42,7 +42,7 @@
     "js-yaml": "^3.13.1"
   },
   "dependencies": {
-    "@360mediadirect/json-schema-ref-parser": "^9.0.9-axios4",
+    "@360mediadirect/json-schema-ref-parser": "^9.0.10",
     "bath-es5": "^3.0.3",
     "lodash": "^4.17.20",
     "openapi-types": "^9.0.0",
