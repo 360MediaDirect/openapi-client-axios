@@ -1,7 +1,7 @@
 {
   "name": "@360mediadirect/openapi-client-axios",
   "description": "JavaScript client library for consuming OpenAPI-enabled APIs with axios. Types included.",
-  "version": "4.1.0-axios5",
+  "version": "4.1.0",
   "author": "Viljami Kuosmanen <viljami@viljami.io>",
   "license": "MIT",
   "keywords": [
